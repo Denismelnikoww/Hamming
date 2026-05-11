@@ -13,51 +13,51 @@
     Background="#16181D"
     mc:Ignorable="d">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
+	<Design.DataContext>
+		<vm:MainWindowViewModel />
+	</Design.DataContext>
 
-    <ScrollViewer>
+	<ScrollViewer>
 
-        <StackPanel Margin="30" Spacing="24">
+		<StackPanel Margin="30" Spacing="24">
 
-            <!--  HEADER  -->
+			<!--  HEADER  -->
 
-            <Border
+			<Border
                 Padding="24"
                 Background="#1E222A"
                 CornerRadius="14">
 
-                <StackPanel Spacing="6">
+				<StackPanel Spacing="6">
 
-                    <TextBlock
+					<TextBlock
                         FontSize="30"
                         FontWeight="Bold"
                         Foreground="White"
                         Text="Алгоритм Хэмминга" />
 
-                    <TextBlock Foreground="#9CA3AF" Text="Пошаговое кодирование и декодирование" />
+					<TextBlock Foreground="#9CA3AF" Text="Пошаговое кодирование и декодирование" />
 
-                </StackPanel>
+				</StackPanel>
 
-            </Border>
+			</Border>
 
-            <!--  ENCODE INPUT  -->
+			<!--  ENCODE INPUT  -->
 
-            <Border
+			<Border
                 Padding="24"
                 Background="#1E222A"
                 CornerRadius="14">
 
-                <StackPanel Spacing="16">
+				<StackPanel Spacing="16">
 
-                    <TextBlock
+					<TextBlock
                         FontSize="22"
                         FontWeight="Bold"
                         Foreground="White"
                         Text="Кодирование" />
 
-                    <TextBox
+					<TextBox
                         Padding="12"
                         Background="#252932"
                         BorderBrush="#323844"
@@ -66,12 +66,12 @@
                         Text="{Binding InputText}"
                         Watermark="Введите текст или биты" />
 
-                    <CheckBox
+					<CheckBox
                         Content="Ввод является бинарной строкой"
                         Foreground="White"
                         IsChecked="{Binding IsBinary}" />
 
-                    <Button
+					<Button
                         Height="42"
                         MinWidth="180"
                         Padding="24,0"
@@ -85,352 +85,352 @@
                         CornerRadius="10"
                         FontWeight="SemiBold" />
 
-                </StackPanel>
+				</StackPanel>
 
-            </Border>
+			</Border>
 
-            <!--  INITIAL TABLE  -->
+			<!--  INITIAL TABLE  -->
 
-            <Border
+			<Border
                 Padding="24"
                 Background="#1E222A"
                 CornerRadius="14">
 
-                <StackPanel Spacing="14">
+				<StackPanel Spacing="14">
 
-                    <TextBlock
+					<TextBlock
                         FontSize="22"
                         FontWeight="Bold"
                         Foreground="White"
-                        Text="1. Вставка контрольных битов" />
+                        Text="Вставка контрольных битов" />
 
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+					<ScrollViewer HorizontalScrollBarVisibility="Auto">
 
-                        <StackPanel Spacing="8">
+						<StackPanel Spacing="8">
 
-                            <!--  HEADERS  -->
+							<!--  HEADERS  -->
 
-                            <StackPanel Orientation="Horizontal">
+							<StackPanel Orientation="Horizontal">
 
-                                <Border Width="120" />
+								<Border Width="120" />
 
-                                <ItemsControl ItemsSource="{Binding InitialTable.Headers}">
+								<ItemsControl ItemsSource="{Binding InitialTable.Headers}">
 
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal" />
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
 
-                                    <ItemsControl.ItemTemplate>
+									<ItemsControl.ItemTemplate>
 
-                                        <DataTemplate>
+										<DataTemplate>
 
-                                            <Border
+											<Border
                                                 Width="40"
                                                 Height="40"
                                                 Background="#2D3340"
                                                 BorderBrush="#3A4150"
                                                 BorderThickness="1">
 
-                                                <TextBlock
+												<TextBlock
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Foreground="White"
                                                     Text="{Binding}" />
 
-                                            </Border>
+											</Border>
 
-                                        </DataTemplate>
+										</DataTemplate>
 
-                                    </ItemsControl.ItemTemplate>
+									</ItemsControl.ItemTemplate>
 
-                                </ItemsControl>
+								</ItemsControl>
 
-                            </StackPanel>
+							</StackPanel>
 
-                            <!--  ROWS  -->
+							<!--  ROWS  -->
 
-                            <ItemsControl ItemsSource="{Binding InitialTable.Rows}">
+							<ItemsControl ItemsSource="{Binding InitialTable.Rows}">
 
-                                <ItemsControl.ItemTemplate>
+								<ItemsControl.ItemTemplate>
 
-                                    <DataTemplate x:DataType="models:HammingVisualRow">
+									<DataTemplate x:DataType="models:HammingVisualRow">
 
-                                        <StackPanel Orientation="Horizontal">
+										<StackPanel Orientation="Horizontal">
 
-                                            <Border
+											<Border
                                                 Width="120"
                                                 Height="40"
                                                 Background="#252932"
                                                 BorderBrush="#3A4150"
                                                 BorderThickness="1">
 
-                                                <TextBlock
+												<TextBlock
                                                     Margin="10,0"
                                                     VerticalAlignment="Center"
                                                     Foreground="White"
                                                     Text="{Binding Name}" />
 
-                                            </Border>
+											</Border>
 
-                                            <ItemsControl ItemsSource="{Binding Values}">
+											<ItemsControl ItemsSource="{Binding Values}">
 
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <StackPanel Orientation="Horizontal" />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
+												<ItemsControl.ItemsPanel>
+													<ItemsPanelTemplate>
+														<StackPanel Orientation="Horizontal" />
+													</ItemsPanelTemplate>
+												</ItemsControl.ItemsPanel>
 
-                                                <ItemsControl.ItemTemplate>
+												<ItemsControl.ItemTemplate>
 
-                                                    <DataTemplate>
+													<DataTemplate>
 
-                                                        <Border
+														<Border
                                                             Width="40"
                                                             Height="40"
                                                             Background="#2D3340"
                                                             BorderBrush="#3A4150"
                                                             BorderThickness="1">
 
-                                                            <TextBlock
+															<TextBlock
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Foreground="White"
                                                                 Text="{Binding}" />
 
-                                                        </Border>
+														</Border>
 
-                                                    </DataTemplate>
+													</DataTemplate>
 
-                                                </ItemsControl.ItemTemplate>
+												</ItemsControl.ItemTemplate>
 
-                                            </ItemsControl>
+											</ItemsControl>
 
-                                        </StackPanel>
+										</StackPanel>
 
-                                    </DataTemplate>
+									</DataTemplate>
 
-                                </ItemsControl.ItemTemplate>
+								</ItemsControl.ItemTemplate>
 
-                            </ItemsControl>
+							</ItemsControl>
 
-                        </StackPanel>
+						</StackPanel>
 
-                    </ScrollViewer>
+					</ScrollViewer>
 
-                </StackPanel>
+				</StackPanel>
 
-            </Border>
+			</Border>
 
-            <!--  MATRIX  -->
+			<!--  MATRIX  -->
 
-            <Border
+			<Border
                 Padding="24"
                 Background="#1E222A"
                 CornerRadius="14">
 
-                <StackPanel Spacing="14">
+				<StackPanel Spacing="14">
 
-                    <TextBlock
+					<TextBlock
                         FontSize="22"
                         FontWeight="Bold"
                         Foreground="White"
-                        Text="2. Матрица преобразования" />
+                        Text="Матрица преобразования" />
 
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+					<ScrollViewer HorizontalScrollBarVisibility="Auto">
 
-                        <StackPanel Spacing="8">
+						<StackPanel Spacing="8">
 
-                            <!--  HEADERS  -->
+							<!--  HEADERS  -->
 
-                            <StackPanel Orientation="Horizontal">
+							<StackPanel Orientation="Horizontal">
 
-                                <Border Width="120" />
+								<Border Width="120" />
 
-                                <ItemsControl ItemsSource="{Binding MatrixTable.Headers}">
+								<ItemsControl ItemsSource="{Binding MatrixTable.Headers}">
 
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal" />
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
 
-                                    <ItemsControl.ItemTemplate>
+									<ItemsControl.ItemTemplate>
 
-                                        <DataTemplate>
+										<DataTemplate>
 
-                                            <Border
+											<Border
                                                 Width="40"
                                                 Height="40"
                                                 Background="#2D3340"
                                                 BorderBrush="#3A4150"
                                                 BorderThickness="1">
 
-                                                <TextBlock
+												<TextBlock
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Foreground="White"
                                                     Text="{Binding}" />
 
-                                            </Border>
+											</Border>
 
-                                        </DataTemplate>
+										</DataTemplate>
 
-                                    </ItemsControl.ItemTemplate>
+									</ItemsControl.ItemTemplate>
 
-                                </ItemsControl>
+								</ItemsControl>
 
-                            </StackPanel>
+							</StackPanel>
 
-                            <!--  ROWS  -->
+							<!--  ROWS  -->
 
-                            <ItemsControl ItemsSource="{Binding MatrixTable.Rows}">
+							<ItemsControl ItemsSource="{Binding MatrixTable.Rows}">
 
-                                <ItemsControl.ItemTemplate>
+								<ItemsControl.ItemTemplate>
 
-                                    <DataTemplate x:DataType="models:HammingVisualRow">
+									<DataTemplate x:DataType="models:HammingVisualRow">
 
-                                        <StackPanel Orientation="Horizontal">
+										<StackPanel Orientation="Horizontal">
 
-                                            <Border
+											<Border
                                                 Width="120"
                                                 Height="40"
                                                 Background="#252932"
                                                 BorderBrush="#3A4150"
                                                 BorderThickness="1">
 
-                                                <TextBlock
+												<TextBlock
                                                     Margin="10,0"
                                                     VerticalAlignment="Center"
                                                     Foreground="White"
                                                     Text="{Binding Name}" />
 
-                                            </Border>
+											</Border>
 
-                                            <ItemsControl ItemsSource="{Binding Values}">
+											<ItemsControl ItemsSource="{Binding Values}">
 
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <StackPanel Orientation="Horizontal" />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
+												<ItemsControl.ItemsPanel>
+													<ItemsPanelTemplate>
+														<StackPanel Orientation="Horizontal" />
+													</ItemsPanelTemplate>
+												</ItemsControl.ItemsPanel>
 
-                                                <ItemsControl.ItemTemplate>
+												<ItemsControl.ItemTemplate>
 
-                                                    <DataTemplate>
+													<DataTemplate>
 
-                                                        <Border
+														<Border
                                                             Width="40"
                                                             Height="40"
                                                             Background="#2D3340"
                                                             BorderBrush="#3A4150"
                                                             BorderThickness="1">
 
-                                                            <TextBlock
+															<TextBlock
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Foreground="White"
                                                                 Text="{Binding}" />
 
-                                                        </Border>
+														</Border>
 
-                                                    </DataTemplate>
+													</DataTemplate>
 
-                                                </ItemsControl.ItemTemplate>
+												</ItemsControl.ItemTemplate>
 
-                                            </ItemsControl>
+											</ItemsControl>
 
-                                        </StackPanel>
+										</StackPanel>
 
-                                    </DataTemplate>
+									</DataTemplate>
 
-                                </ItemsControl.ItemTemplate>
+								</ItemsControl.ItemTemplate>
 
-                            </ItemsControl>
+							</ItemsControl>
 
-                        </StackPanel>
+						</StackPanel>
 
-                    </ScrollViewer>
+					</ScrollViewer>
 
-                </StackPanel>
+				</StackPanel>
 
-            </Border>
+			</Border>
 
-            <!--  CALCULATIONS  -->
+			<!--  CALCULATIONS  -->
 
-            <Border
+			<Border
                 Padding="24"
                 Background="#1E222A"
                 CornerRadius="14">
 
-                <StackPanel Spacing="12">
+				<StackPanel Spacing="12">
 
-                    <TextBlock
+					<TextBlock
                         FontSize="22"
                         FontWeight="Bold"
                         Foreground="White"
-                        Text="3. Вычисление контрольных битов" />
+                        Text="Вычисление контрольных битов" />
 
-                    <ItemsControl ItemsSource="{Binding Calculations}">
+					<ItemsControl ItemsSource="{Binding Calculations}">
 
-                        <ItemsControl.ItemTemplate>
+						<ItemsControl.ItemTemplate>
 
-                            <DataTemplate x:DataType="models:ParityCalculation">
+							<DataTemplate x:DataType="models:ParityCalculation">
 
-                                <Border
+								<Border
                                     Padding="12"
                                     Background="#252932"
                                     CornerRadius="10">
 
-                                    <StackPanel Spacing="4">
+									<StackPanel Spacing="4">
 
-                                        <TextBlock
+										<TextBlock
                                             FontSize="18"
                                             FontWeight="Bold"
                                             Foreground="#60A5FA"
                                             Text="{Binding Name}" />
 
-                                        <TextBlock
+										<TextBlock
                                             Foreground="White"
                                             Text="{Binding Formula}"
                                             TextWrapping="Wrap" />
 
-                                    </StackPanel>
+									</StackPanel>
 
-                                </Border>
+								</Border>
 
-                            </DataTemplate>
+							</DataTemplate>
 
-                        </ItemsControl.ItemTemplate>
+						</ItemsControl.ItemTemplate>
 
-                    </ItemsControl>
+					</ItemsControl>
 
-                </StackPanel>
+				</StackPanel>
 
-            </Border>
+			</Border>
 
-            <!--  FINAL CODE  -->
+			<!--  FINAL CODE  -->
 
-            <Border
+			<Border
                 Padding="24"
                 Background="#1E222A"
                 CornerRadius="14">
 
-                <StackPanel Spacing="12">
+				<StackPanel Spacing="12">
 
-                    <TextBlock
+					<TextBlock
                         FontSize="22"
                         FontWeight="Bold"
                         Foreground="White"
-                        Text="4. Итоговый код" />
+                        Text="Итоговый код" />
 
-                    <Border
+					<Border
                         Padding="16"
                         Background="#252932"
                         CornerRadius="10">
 
-                        <TextBox
+						<TextBox
                             Background="Transparent"
                             BorderThickness="0"
                             FontSize="24"
@@ -441,28 +441,28 @@
                             Text="{Binding FinalCode}"
                             TextWrapping="Wrap" />
 
-                    </Border>
+					</Border>
 
-                </StackPanel>
+				</StackPanel>
 
-            </Border>
+			</Border>
 
-            <!--  DECODE  -->
+			<!--  DECODE  -->
 
-            <Border
+			<Border
                 Padding="24"
                 Background="#1E222A"
                 CornerRadius="14">
 
-                <StackPanel Spacing="16">
+				<StackPanel Spacing="16">
 
-                    <TextBlock
+					<TextBlock
                         FontSize="24"
                         FontWeight="Bold"
                         Foreground="White"
                         Text="Декодирование и синдромы" />
 
-                    <TextBox
+					<TextBox
                         Padding="12"
                         Background="#252932"
                         BorderBrush="#323844"
@@ -471,7 +471,7 @@
                         Text="{Binding DecodeInput}"
                         Watermark="Введите код Хэмминга" />
 
-                    <Button
+					<Button
                         Height="42"
                         MinWidth="180"
                         Padding="24,0"
@@ -485,193 +485,196 @@
                         CornerRadius="10"
                         FontWeight="SemiBold" />
 
-                    <!--  SYNDROME TABLE  -->
+					<!--  SYNDROME TABLE  -->
 
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+					<ScrollViewer HorizontalScrollBarVisibility="Auto">
 
-                        <StackPanel Spacing="8">
+						<StackPanel Spacing="8">
 
-                            <!--  HEADERS  -->
+							<!--  HEADERS  -->
 
-                            <StackPanel Orientation="Horizontal">
+							<StackPanel Orientation="Horizontal">
 
-                                <Border Width="120" />
+								<Border Width="120" />
 
-                                <ItemsControl ItemsSource="{Binding SyndromeTable.Headers}">
+								<ItemsControl ItemsSource="{Binding SyndromeTable.Headers}">
 
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal" />
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
 
-                                    <ItemsControl.ItemTemplate>
+									<ItemsControl.ItemTemplate>
 
-                                        <DataTemplate>
+										<DataTemplate>
 
-                                            <Border
+											<Border
                                                 Width="40"
                                                 Height="40"
                                                 Background="#2D3340"
                                                 BorderBrush="#3A4150"
                                                 BorderThickness="1">
 
-                                                <TextBlock
+												<TextBlock
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Foreground="White"
                                                     Text="{Binding}" />
 
-                                            </Border>
+											</Border>
 
-                                        </DataTemplate>
+										</DataTemplate>
 
-                                    </ItemsControl.ItemTemplate>
+									</ItemsControl.ItemTemplate>
 
-                                </ItemsControl>
+								</ItemsControl>
 
-                            </StackPanel>
+							</StackPanel>
 
-                            <!--  ROWS  -->
+							<!--  ROWS  -->
 
-                            <ItemsControl ItemsSource="{Binding SyndromeTable.Rows}">
+							<ItemsControl ItemsSource="{Binding SyndromeTable.Rows}">
 
-                                <ItemsControl.ItemTemplate>
+								<ItemsControl.ItemTemplate>
 
-                                    <DataTemplate x:DataType="models:HammingVisualRow">
+									<DataTemplate x:DataType="models:HammingVisualRow">
 
-                                        <StackPanel Orientation="Horizontal">
+										<StackPanel Orientation="Horizontal">
 
-                                            <Border
+											<Border
                                                 Width="120"
                                                 Height="40"
                                                 Background="#252932"
                                                 BorderBrush="#3A4150"
                                                 BorderThickness="1">
 
-                                                <TextBlock
+												<TextBlock
                                                     Margin="10,0"
                                                     VerticalAlignment="Center"
                                                     Foreground="White"
                                                     Text="{Binding Name}" />
 
-                                            </Border>
+											</Border>
 
-                                            <ItemsControl ItemsSource="{Binding Values}">
+											<ItemsControl ItemsSource="{Binding Values}">
 
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <StackPanel Orientation="Horizontal" />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
+												<ItemsControl.ItemsPanel>
+													<ItemsPanelTemplate>
+														<StackPanel Orientation="Horizontal" />
+													</ItemsPanelTemplate>
+												</ItemsControl.ItemsPanel>
 
-                                                <ItemsControl.ItemTemplate>
+												<ItemsControl.ItemTemplate>
 
-                                                    <DataTemplate>
+													<DataTemplate>
 
-                                                        <Border
+														<Border
                                                             Width="40"
                                                             Height="40"
                                                             Background="#2D3340"
                                                             BorderBrush="#3A4150"
                                                             BorderThickness="1">
 
-                                                            <TextBlock
+															<TextBlock
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
                                                                 Foreground="White"
                                                                 Text="{Binding}" />
 
-                                                        </Border>
+														</Border>
 
-                                                    </DataTemplate>
+													</DataTemplate>
 
-                                                </ItemsControl.ItemTemplate>
+												</ItemsControl.ItemTemplate>
 
-                                            </ItemsControl>
+											</ItemsControl>
 
-                                        </StackPanel>
+										</StackPanel>
 
-                                    </DataTemplate>
+									</DataTemplate>
 
-                                </ItemsControl.ItemTemplate>
+								</ItemsControl.ItemTemplate>
 
-                            </ItemsControl>
+							</ItemsControl>
 
-                        </StackPanel>
+						</StackPanel>
 
-                    </ScrollViewer>
+					</ScrollViewer>
 
-                    <!--  SYNDROME RESULTS  -->
+					<!--  SYNDROME RESULTS  -->
 
-                    <ItemsControl ItemsSource="{Binding SyndromeRows}">
+					<ItemsControl ItemsSource="{Binding SyndromeRows}">
 
-                        <ItemsControl.ItemTemplate>
+						<ItemsControl.ItemTemplate>
 
-                            <DataTemplate x:DataType="models:SyndromeRow">
+							<DataTemplate x:DataType="models:SyndromeRow">
 
-                                <Border
+								<Border
                                     Padding="12"
                                     Background="#252932"
                                     CornerRadius="10">
 
-                                    <StackPanel Spacing="4">
+									<StackPanel Spacing="4">
 
-                                        <TextBlock
+										<TextBlock
                                             FontSize="18"
                                             FontWeight="Bold"
                                             Foreground="#F87171"
                                             Text="{Binding Name}" />
 
-                                        <TextBlock Foreground="White" Text="{Binding Result}" />
+										<TextBlock
+                                            Foreground="White"
+                                            Text="{Binding Formula}"
+                                            TextWrapping="Wrap" />
 
-                                    </StackPanel>
+									</StackPanel>
 
-                                </Border>
+								</Border>
 
-                            </DataTemplate>
+							</DataTemplate>
 
-                        </ItemsControl.ItemTemplate>
+						</ItemsControl.ItemTemplate>
 
-                    </ItemsControl>
+					</ItemsControl>
 
-                    <!--  RESULT  -->
+					<!--  RESULT  -->
 
-                    <Border
+					<Border
                         Padding="16"
                         Background="#252932"
                         CornerRadius="10">
 
-                        <StackPanel Spacing="8">
+						<StackPanel Spacing="8">
 
-                            <TextBlock
+							<TextBlock
                                 FontSize="20"
                                 FontWeight="Bold"
                                 Foreground="White"
                                 Text="Матрица синдромов" />
 
-                            <TextBlock
+							<TextBlock
                                 FontSize="28"
                                 FontWeight="Bold"
                                 Foreground="#FBBF24"
                                 Text="{Binding SyndromeBits}" />
 
-                            <TextBlock
+							<TextBlock
                                 FontSize="22"
                                 FontWeight="Bold"
                                 Foreground="#34D399"
                                 Text="{Binding DecodeResult}" />
 
-                        </StackPanel>
+						</StackPanel>
 
-                    </Border>
+					</Border>
 
-                </StackPanel>
+				</StackPanel>
 
-            </Border>
+			</Border>
 
-        </StackPanel>
+		</StackPanel>
 
-    </ScrollViewer>
+	</ScrollViewer>
 
 </Window>

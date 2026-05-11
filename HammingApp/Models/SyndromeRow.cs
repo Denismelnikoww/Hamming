@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace HammingApp.Models;
+﻿namespace HammingApp.Models;
 
 public class SyndromeRow
 {
     public string Name { get; set; } = string.Empty;
 
-    public List<string> Values { get; set; } = new();
+    public string Formula { get; set; } = string.Empty;
 
     public int Result { get; set; }
 }

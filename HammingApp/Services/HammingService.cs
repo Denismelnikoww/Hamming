@@ -84,14 +84,14 @@ public class HammingService
 
     private int CalculateParityBitsCount(int dataLength)
     {
-        int r = 0;
+        int s = 0;
 
-        while (Math.Pow(2, r) < dataLength + r + 1)
+        while (Math.Pow(2, s) < dataLength + s + 1)
         {
-            r++;
+            s++;
         }
 
-        return r;
+        return s;
     }
 
     private bool IsPowerOfTwo(int x)
@@ -122,7 +122,7 @@ public class HammingService
         {
             if (IsPowerOfTwo(i))
             {
-                names.Values.Add($"r{parityIndex}");
+                names.Values.Add($"s{parityIndex}");
                 parityIndex++;
             }
             else
@@ -172,14 +172,14 @@ public class HammingService
 
         table.Rows.Add(valuesRow);
 
-        for (int r = 0; r < parityCount; r++)
+        for (int s = 0; s < parityCount; s++)
         {
             var row = new HammingVisualRow
             {
-                Name = $"r{r}"
+                Name = $"s{s}"
             };
 
-            int mask = 1 << r;
+            int mask = 1 << s;
 
             for (int col = 1; col <= totalLength; col++)
             {
@@ -201,9 +201,9 @@ public class HammingService
     {
         var calculations = new List<ParityCalculation>();
 
-        for (int r = 0; r < parityCount; r++)
+        for (int s = 0; s < parityCount; s++)
         {
-            int mask = 1 << r;
+            int mask = 1 << s;
 
             List<string> parts = new();
 
@@ -223,7 +223,7 @@ public class HammingService
 
             calculations.Add(new ParityCalculation
             {
-                Name = $"r{r}",
+                Name = $"s{s}",
                 Formula =
                     $"({string.Join(" + ", parts)}) mod 2 = {result}",
                 Result = result
@@ -250,35 +250,41 @@ public class HammingService
 
         var result = new HammingDecodeResult();
 
-        result.SyndromeTable = BuildSyndromeTable(bits, parityCount);
+        result.SyndromeTable =
+            BuildSyndromeTable(bits, parityCount);
 
         List<int> syndromeBits = new();
 
-        for (int r = 0; r < parityCount; r++)
+        for (int s = 0; s < parityCount; s++)
         {
-            int mask = 1 << r;
+            int mask = 1 << s;
 
-            int parity = 0;
+            List<string> expression = new();
 
-            List<string> rowValues = new();
+            int sum = 0;
 
             for (int i = 1; i <= totalLength; i++)
             {
                 if ((i & mask) != 0)
                 {
-                    parity ^= bits[i - 1];
+                    expression.Add(bits[i - 1].ToString());
 
-                    rowValues.Add(bits[i - 1].ToString());
+                    sum += bits[i - 1];
                 }
             }
 
-            syndromeBits.Add(parity);
+            int resultBit = sum % 2;
+
+            syndromeBits.Add(resultBit);
 
             result.SyndromeRows.Add(new SyndromeRow
             {
-                Name = $"S{r}",
-                Values = rowValues,
-                Result = parity
+                Name = $"s{s}",
+
+                Formula =
+                    $"({string.Join(" + ", expression)}) mod 2 = {resultBit}",
+
+                Result = resultBit
             });
         }
 
@@ -316,14 +322,14 @@ public class HammingService
 
         table.Rows.Add(codeRow);
 
-        for (int r = 0; r < parityCount; r++)
+        for (int s = 0; s < parityCount; s++)
         {
             var row = new HammingVisualRow
             {
-                Name = $"S{r}"
+                Name = $"s{s}"
             };
 
-            int mask = 1 << r;
+            int mask = 1 << s;
 
             for (int i = 1; i <= bits.Count; i++)
             {
