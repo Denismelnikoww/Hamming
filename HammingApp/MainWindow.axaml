@@ -2,6 +2,7 @@
     x:Class="HammingApp.MainWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:HammingApp.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -48,22 +49,137 @@
                 FontWeight="Bold"
                 Text="Таблица Хэмминга" />
 
-            <DataGrid
-                Height="250"
-                AutoGenerateColumns="False"
-                ItemsSource="{Binding SyndromeRows}">
+            <Border
+                Padding="10"
+                BorderBrush="Gray"
+                BorderThickness="1">
 
-                <DataGrid.Columns>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
 
-                    <DataGridTextColumn Binding="{Binding Position}" Header="Позиция" />
+                    <StackPanel Spacing="10">
 
-                    <DataGridTextColumn Binding="{Binding Value}" Header="Значение" />
+                        <!--  Позиции  -->
 
-                    <DataGridCheckBoxColumn Binding="{Binding IsControlBit}" Header="Контрольный бит" />
+                        <StackPanel Orientation="Horizontal" Spacing="5">
 
-                </DataGrid.Columns>
+                            <TextBlock
+                                Width="120"
+                                FontWeight="Bold"
+                                Text="Позиция" />
 
-            </DataGrid>
+                            <ItemsControl ItemsSource="{Binding SyndromeRows}">
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+
+                                    <DataTemplate>
+
+                                        <Border
+                                            Width="40"
+                                            Padding="5"
+                                            BorderBrush="LightGray"
+                                            BorderThickness="1">
+
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding Position}" />
+
+                                        </Border>
+
+                                    </DataTemplate>
+
+                                </ItemsControl.ItemTemplate>
+
+                            </ItemsControl>
+
+                        </StackPanel>
+
+                        <!--  Значения  -->
+
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+
+                            <TextBlock
+                                Width="120"
+                                FontWeight="Bold"
+                                Text="Значение" />
+
+                            <ItemsControl ItemsSource="{Binding SyndromeRows}">
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+
+                                    <DataTemplate>
+
+                                        <Border
+                                            Width="40"
+                                            Padding="5"
+                                            BorderBrush="LightGray"
+                                            BorderThickness="1">
+
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding Value}" />
+
+                                        </Border>
+
+                                    </DataTemplate>
+
+                                </ItemsControl.ItemTemplate>
+
+                            </ItemsControl>
+
+                        </StackPanel>
+
+                        <!--  Контрольные биты  -->
+
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+
+                            <TextBlock
+                                Width="120"
+                                FontWeight="Bold"
+                                Text="Контрольный" />
+
+                            <ItemsControl ItemsSource="{Binding SyndromeRows}">
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+
+                                    <DataTemplate>
+
+                                        <Border
+                                            Width="40"
+                                            Padding="5"
+                                            BorderBrush="LightGray"
+                                            BorderThickness="1">
+
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding IsControlBit, Converter={x:Static converters:BooleanToPlusMinusConverter.Instance}}" />
+
+                                        </Border>
+
+                                    </DataTemplate>
+
+                                </ItemsControl.ItemTemplate>
+
+                            </ItemsControl>
+
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </ScrollViewer>
+
+            </Border>
 
             <TextBlock
                 Margin="0,20,0,0"
