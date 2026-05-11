@@ -1,0 +1,87 @@
+<Window
+    x:Class="HammingApp.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:HammingApp.Models"
+    xmlns:vm="using:HammingApp.ViewModels"
+    Title="Код Хэмминга"
+    Width="1000"
+    Height="700"
+    x:DataType="vm:MainWindowViewModel"
+    mc:Ignorable="d">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+
+        <StackPanel Margin="20" Spacing="10">
+
+            <TextBlock
+                FontSize="24"
+                FontWeight="Bold"
+                Text="Кодирование по Хэммингу" />
+
+            <TextBlock Text="Введите текст или биты" />
+
+            <TextBox Text="{Binding InputText}" />
+
+            <CheckBox Content="Ввод является бинарной строкой" IsChecked="{Binding IsBinary}" />
+
+            <Button Command="{Binding EncodeCommand}" Content="Закодировать" />
+
+            <TextBlock FontWeight="Bold" Text="Исходные биты:" />
+
+            <TextBox IsReadOnly="True" Text="{Binding SourceBits}" />
+
+            <TextBlock FontWeight="Bold" Text="Закодированное сообщение:" />
+
+            <TextBox IsReadOnly="True" Text="{Binding EncodedResult}" />
+
+            <TextBlock
+                Margin="0,20,0,0"
+                FontSize="18"
+                FontWeight="Bold"
+                Text="Таблица Хэмминга" />
+
+            <DataGrid
+                Height="250"
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding SyndromeRows}">
+
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Binding="{Binding Position}" Header="Позиция" />
+
+                    <DataGridTextColumn Binding="{Binding Value}" Header="Значение" />
+
+                    <DataGridCheckBoxColumn Binding="{Binding IsControlBit}" Header="Контрольный бит" />
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+
+            <TextBlock
+                Margin="0,20,0,0"
+                FontSize="18"
+                FontWeight="Bold"
+                Text="Проверка ошибки" />
+
+            <TextBox Text="{Binding CheckInput}" Watermark="Введите код Хэмминга" />
+
+            <Button Command="{Binding CheckErrorCommand}" Content="Проверить" />
+
+            <TextBlock
+                FontSize="18"
+                FontWeight="Bold"
+                Text="{Binding ErrorResult}" />
+
+        </StackPanel>
+
+    </ScrollViewer>
+
+</Window>
