@@ -1,14 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HammingApp.Models;
 using HammingApp.Services;
+using System.Collections.ObjectModel;
 
 namespace HammingApp.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject
 {
-    private readonly HammingService _hammingService = new();
+    private readonly HammingService _service = new();
 
     [ObservableProperty]
     private string inputText = string.Empty;
@@ -17,48 +17,65 @@ public partial class MainWindowViewModel : ObservableObject
     private bool isBinary;
 
     [ObservableProperty]
-    private string sourceBits = string.Empty;
+    private HammingVisualTable initialTable = new();
 
     [ObservableProperty]
-    private string encodedResult = string.Empty;
+    private HammingVisualTable matrixTable = new();
 
     [ObservableProperty]
-    private string checkInput = string.Empty;
+    private ObservableCollection<ParityCalculation> calculations = new();
 
     [ObservableProperty]
-    private string errorResult = string.Empty;
+    private string finalCode = string.Empty;
 
-    public ObservableCollection<SyndromeRow> SyndromeRows { get; } = new();
+    [ObservableProperty]
+    private string decodeInput = string.Empty;
+
+    [ObservableProperty]
+    private HammingVisualTable syndromeTable = new();
+
+    [ObservableProperty]
+    private ObservableCollection<SyndromeRow> syndromeRows = new();
+
+    [ObservableProperty]
+    private string syndromeBits = string.Empty;
+
+    [ObservableProperty]
+    private string decodeResult = string.Empty;
 
     [RelayCommand]
     private void Encode()
     {
-        SyndromeRows.Clear();
+        var result = _service.Encode(InputText, IsBinary);
 
-        HammingResult result = _hammingService.Encode(InputText, IsBinary);
+        InitialTable = result.InitialTable;
 
-        SourceBits = result.SourceBits;
+        MatrixTable = result.MatrixTable;
 
-        EncodedResult = result.EncodedBits;
+        Calculations = new ObservableCollection<ParityCalculation>(
+            result.Calculations
+        );
 
-        foreach (SyndromeRow row in result.SyndromeTable)
-        {
-            SyndromeRows.Add(row);
-        }
+        FinalCode = result.FinalCode;
     }
 
     [RelayCommand]
-    private void CheckError()
+    private void Decode()
     {
-        int errorPosition = _hammingService.FindErrorPosition(CheckInput);
+        var result = _service.Decode(DecodeInput);
 
-        if (errorPosition == 0)
-        {
-            ErrorResult = "Ошибок нет";
-        }
-        else
-        {
-            ErrorResult = $"Ошибка в бите № {errorPosition}";
-        }
+        SyndromeTable = result.SyndromeTable;
+
+        SyndromeRows = new ObservableCollection<SyndromeRow>(
+            result.SyndromeRows
+        );
+
+        SyndromeBits = result.SyndromeBits;
+
+        DecodeResult =
+            result.ErrorPosition == 0
+                ? "Ошибок не обнаружено"
+                : $"Ошибка в бите №{result.ErrorPosition}";
     }
 }
+

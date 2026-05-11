@@ -1,45 +1,28 @@
-﻿using System;
+﻿using HammingApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using HammingApp.Models;
 
 namespace HammingApp.Services;
 
 public class HammingService
 {
-    public string TextToBits(string text)
-    {
-        StringBuilder builder = new();
-
-        foreach (char ch in text)
-        {
-            builder.Append(Convert.ToString(ch, 2).PadLeft(8, '0'));
-        }
-
-        return builder.ToString();
-    }
-
-    public HammingResult Encode(string input, bool isBinary)
+    public HammingEncodeResult Encode(string input, bool isBinary)
     {
         string bits = isBinary
             ? input
-            : TextToBits(input);
+            : ConvertToBits(input);
 
-        List<int> data = bits
+        List<int> dataBits = bits
             .Select(x => x - '0')
             .ToList();
 
-        int controlBitsCount = 0;
+        int parityCount = CalculateParityBitsCount(dataBits.Count);
 
-        while (Math.Pow(2, controlBitsCount) < data.Count + controlBitsCount + 1)
-        {
-            controlBitsCount++;
-        }
+        int totalLength = dataBits.Count + parityCount;
 
-        int totalLength = data.Count + controlBitsCount;
-
-        int[] result = new int[totalLength + 1];
+        int[] code = new int[totalLength + 1];
 
         int dataIndex = 0;
 
@@ -47,90 +30,313 @@ public class HammingService
         {
             if (IsPowerOfTwo(i))
             {
-                result[i] = 0;
+                code[i] = 0;
             }
             else
             {
-                result[i] = data[dataIndex++];
+                code[i] = dataBits[dataIndex++];
             }
         }
 
-        for (int i = 0; i < controlBitsCount; i++)
+        var result = new HammingEncodeResult();
+
+        result.InitialTable = BuildInitialTable(code, totalLength);
+
+        result.MatrixTable = BuildMatrixTable(code, totalLength, parityCount);
+
+        result.Calculations = BuildCalculations(code, totalLength, parityCount);
+
+        for (int i = 0; i < parityCount; i++)
         {
-            int position = 1 << i;
+            int parityPosition = 1 << i;
 
             int parity = 0;
 
             for (int j = 1; j <= totalLength; j++)
             {
-                if ((j & position) != 0)
+                if ((j & parityPosition) != 0)
                 {
-                    parity ^= result[j];
+                    parity ^= code[j];
                 }
             }
 
-            result[position] = parity;
+            code[parityPosition] = parity;
         }
 
-        string encoded = string.Join("", result.Skip(1));
+        result.FinalCode = string.Join("", code.Skip(1));
 
-        HammingResult hammingResult = new()
+        return result;
+    }
+
+    private string ConvertToBits(string input)
+    {
+        StringBuilder builder = new();
+
+        foreach (char c in input)
         {
-            SourceBits = bits,
-            EncodedBits = encoded
+            builder.Append(
+                Convert.ToString(c, 2).PadLeft(8, '0')
+            );
+        }
+
+        return builder.ToString();
+    }
+
+    private int CalculateParityBitsCount(int dataLength)
+    {
+        int r = 0;
+
+        while (Math.Pow(2, r) < dataLength + r + 1)
+        {
+            r++;
+        }
+
+        return r;
+    }
+
+    private bool IsPowerOfTwo(int x)
+    {
+        return (x & (x - 1)) == 0;
+    }
+
+    private HammingVisualTable BuildInitialTable(
+        int[] code,
+        int totalLength)
+    {
+        var table = new HammingVisualTable();
+
+        for (int i = 1; i <= totalLength; i++)
+        {
+            table.Headers.Add(i.ToString());
+        }
+
+        var names = new HammingVisualRow
+        {
+            Name = "Бит"
+        };
+
+        int infoIndex = 1;
+        int parityIndex = 0;
+
+        for (int i = 1; i <= totalLength; i++)
+        {
+            if (IsPowerOfTwo(i))
+            {
+                names.Values.Add($"r{parityIndex}");
+                parityIndex++;
+            }
+            else
+            {
+                names.Values.Add($"x{infoIndex}");
+                infoIndex++;
+            }
+        }
+
+        var values = new HammingVisualRow
+        {
+            Name = "Значение"
         };
 
         for (int i = 1; i <= totalLength; i++)
         {
-            hammingResult.SyndromeTable.Add(new SyndromeRow
-            {
-                Position = i,
-                Value = result[i],
-                IsControlBit = IsPowerOfTwo(i)
-            });
+            values.Values.Add(code[i].ToString());
         }
 
-        return hammingResult;
+        table.Rows.Add(names);
+        table.Rows.Add(values);
+
+        return table;
     }
 
-    public int FindErrorPosition(string encodedBits)
+    private HammingVisualTable BuildMatrixTable(
+        int[] code,
+        int totalLength,
+        int parityCount)
     {
-        int[] bits = new int[encodedBits.Length + 1];
+        var table = new HammingVisualTable();
 
-        for (int i = 0; i < encodedBits.Length; i++)
+        for (int i = 1; i <= totalLength; i++)
         {
-            bits[i + 1] = encodedBits[i] - '0';
+            table.Headers.Add(i.ToString());
         }
 
-        int syndrome = 0;
-
-        int controlBits = (int)Math.Ceiling(Math.Log2(encodedBits.Length));
-
-        for (int i = 0; i < controlBits; i++)
+        var valuesRow = new HammingVisualRow
         {
-            int position = 1 << i;
+            Name = "Код"
+        };
 
-            int parity = 0;
+        for (int i = 1; i <= totalLength; i++)
+        {
+            valuesRow.Values.Add(code[i].ToString());
+        }
 
-            for (int j = 1; j <= encodedBits.Length; j++)
+        table.Rows.Add(valuesRow);
+
+        for (int r = 0; r < parityCount; r++)
+        {
+            var row = new HammingVisualRow
             {
-                if ((j & position) != 0)
+                Name = $"r{r}"
+            };
+
+            int mask = 1 << r;
+
+            for (int col = 1; col <= totalLength; col++)
+            {
+                row.Values.Add(
+                    (col & mask) != 0 ? "1" : "0"
+                );
+            }
+
+            table.Rows.Add(row);
+        }
+
+        return table;
+    }
+
+    private List<ParityCalculation> BuildCalculations(
+        int[] code,
+        int totalLength,
+        int parityCount)
+    {
+        var calculations = new List<ParityCalculation>();
+
+        for (int r = 0; r < parityCount; r++)
+        {
+            int mask = 1 << r;
+
+            List<string> parts = new();
+
+            int sum = 0;
+
+            for (int i = 1; i <= totalLength; i++)
+            {
+                if ((i & mask) != 0)
                 {
-                    parity ^= bits[j];
+                    parts.Add(code[i].ToString());
+
+                    sum += code[i];
                 }
             }
 
-            if (parity != 0)
+            int result = sum % 2;
+
+            calculations.Add(new ParityCalculation
             {
-                syndrome += position;
-            }
+                Name = $"r{r}",
+                Formula =
+                    $"({string.Join(" + ", parts)}) mod 2 = {result}",
+                Result = result
+            });
         }
 
-        return syndrome;
+        return calculations;
     }
 
-    private bool IsPowerOfTwo(int number)
+    public HammingDecodeResult Decode(string encodedBits)
     {
-        return (number & (number - 1)) == 0;
+        List<int> bits = encodedBits
+            .Select(x => x - '0')
+            .ToList();
+
+        int totalLength = bits.Count;
+
+        int parityCount = 0;
+
+        while (Math.Pow(2, parityCount) < totalLength + 1)
+        {
+            parityCount++;
+        }
+
+        var result = new HammingDecodeResult();
+
+        result.SyndromeTable = BuildSyndromeTable(bits, parityCount);
+
+        List<int> syndromeBits = new();
+
+        for (int r = 0; r < parityCount; r++)
+        {
+            int mask = 1 << r;
+
+            int parity = 0;
+
+            List<string> rowValues = new();
+
+            for (int i = 1; i <= totalLength; i++)
+            {
+                if ((i & mask) != 0)
+                {
+                    parity ^= bits[i - 1];
+
+                    rowValues.Add(bits[i - 1].ToString());
+                }
+            }
+
+            syndromeBits.Add(parity);
+
+            result.SyndromeRows.Add(new SyndromeRow
+            {
+                Name = $"S{r}",
+                Values = rowValues,
+                Result = parity
+            });
+        }
+
+        string syndromeBinary =
+            string.Join("", syndromeBits.Reverse<int>());
+
+        result.SyndromeBits = syndromeBinary;
+
+        result.ErrorPosition =
+            Convert.ToInt32(syndromeBinary, 2);
+
+        return result;
+    }
+
+    private HammingVisualTable BuildSyndromeTable(
+    List<int> bits,
+    int parityCount)
+    {
+        var table = new HammingVisualTable();
+
+        for (int i = 1; i <= bits.Count; i++)
+        {
+            table.Headers.Add(i.ToString());
+        }
+
+        var codeRow = new HammingVisualRow
+        {
+            Name = "Код"
+        };
+
+        foreach (int bit in bits)
+        {
+            codeRow.Values.Add(bit.ToString());
+        }
+
+        table.Rows.Add(codeRow);
+
+        for (int r = 0; r < parityCount; r++)
+        {
+            var row = new HammingVisualRow
+            {
+                Name = $"S{r}"
+            };
+
+            int mask = 1 << r;
+
+            for (int i = 1; i <= bits.Count; i++)
+            {
+                row.Values.Add(
+                    (i & mask) != 0
+                        ? "1"
+                        : "0"
+                );
+            }
+
+            table.Rows.Add(row);
+        }
+
+        return table;
     }
 }
