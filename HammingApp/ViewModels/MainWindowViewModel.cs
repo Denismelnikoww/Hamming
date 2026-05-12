@@ -42,6 +42,19 @@ public partial class MainWindowViewModel : ObservableObject
 
     [ObservableProperty]
     private string decodeResult = string.Empty;
+    
+    // Новые свойства для полного декодирования
+    [ObservableProperty]
+    private string correctedCode = string.Empty;
+    
+    [ObservableProperty]
+    private string decodedBinary = string.Empty;
+    
+    [ObservableProperty]
+    private string decodedAscii = string.Empty;
+    
+    [ObservableProperty]
+    private bool hasError;
 
     [RelayCommand]
     private void Encode()
@@ -49,33 +62,50 @@ public partial class MainWindowViewModel : ObservableObject
         var result = _service.Encode(InputText, IsBinary);
 
         InitialTable = result.InitialTable;
-
         MatrixTable = result.MatrixTable;
-
-        Calculations = new ObservableCollection<ParityCalculation>(
-            result.Calculations
-        );
-
+        Calculations = new ObservableCollection<ParityCalculation>(result.Calculations);
         FinalCode = result.FinalCode;
     }
 
     [RelayCommand]
     private void Decode()
     {
-        var result = _service.Decode(DecodeInput);
+        var result = _service.DecodeToAscii(DecodeInput);
 
         SyndromeTable = result.SyndromeTable;
-
-        SyndromeRows = new ObservableCollection<SyndromeRow>(
-            result.SyndromeRows
-        );
-
+        SyndromeRows = new ObservableCollection<SyndromeRow>(result.SyndromeRows);
         SyndromeBits = result.SyndromeBits;
-
-        DecodeResult =
-            result.ErrorPosition == 0
-                ? "Ошибок не обнаружено"
-                : $"Ошибка в бите №{result.ErrorPosition}";
+        
+        HasError = result.ErrorPosition != 0;
+        
+        if (HasError)
+        {
+            DecodeResult = result.ErrorCorrected 
+                ? $"✅ Ошибка обнаружена и исправлена в бите №{result.ErrorPosition}"
+                : $"❌ Ошибка в бите №{result.ErrorPosition} (не удалось исправить)";
+            
+            CorrectedCode = result.CorrectedCode;
+        }
+        else
+        {
+            DecodeResult = "✅ Ошибок не обнаружено";
+            CorrectedCode = DecodeInput;
+        }
+        
+        DecodedBinary = result.BinaryString;
+        DecodedAscii = string.IsNullOrEmpty(result.AsciiText) 
+            ? "Не удалось декодировать в ASCII (неверный формат данных)" 
+            : result.AsciiText;
+    }
+    
+    partial void OnDecodeInputChanged(string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            DecodeResult = string.Empty;
+            DecodedBinary = string.Empty;
+            DecodedAscii = string.Empty;
+            CorrectedCode = string.Empty;
+        }
     }
 }
-
